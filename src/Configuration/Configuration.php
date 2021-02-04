@@ -3,6 +3,7 @@
 namespace PhpAbac\Configuration;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 use PhpAbac\Loader\JsonLoader;
@@ -34,8 +35,11 @@ class Configuration implements ConfigurationInterface
     {
         $locator = new FileLocator($configDir);
         foreach (self::LOADERS as $loaderClass) {
+            /** @var FileLoader $loader */
             $loader = new $loaderClass($locator);
-            $loader->setCurrentDir($configDir);
+            if ($configDir) {
+                $loader->setCurrentDir($configDir);
+            }
             $this->loaders[] = $loader;
         }
     }
